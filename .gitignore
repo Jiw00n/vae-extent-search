@@ -245,3 +245,15 @@ scripts/*.pkl
 scripts/.dataset_cache
 scripts/results.tsv
 scripts/total_latency.tsv
+scripts/*.txt
+scripts/vae_experiments/
+
+# Model files
+*.pth
+*.pt
+
+# Large directories
+dataset/
+build/
+gallery/
+3rdparty/
