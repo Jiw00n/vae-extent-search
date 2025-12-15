@@ -138,7 +138,7 @@ def train_zero_shot(dataset, train_ratio, model_names, split_scheme, use_gpu):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", nargs="+", type=str, default=["dataset.pkl"])
-    parser.add_argument("--models", type=str, default="xgb")
+    parser.add_argument("--models", type=str, default="mlp")
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--split-scheme",
@@ -165,6 +165,7 @@ if __name__ == "__main__":
 
     print("Load dataset...")
     dataset = pickle.load(open(args.dataset[0], "rb"))
+    breakpoint()
     for i in range(1, len(args.dataset)):
         tmp_dataset = pickle.load(open(args.dataset[i], "rb"))
         dataset.update_from_dataset(tmp_dataset)

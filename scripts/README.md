@@ -32,3 +32,7 @@ python3 dump_programs.py
 python3 measure_programs.py --target "llvm -mcpu=core-avx2"
 ```
 
+
+
+Check /root/work/tenset/scripts/pre_experiments/model_myself/vae_extent_search.py
+

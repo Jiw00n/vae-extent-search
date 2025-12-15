@@ -16,15 +16,37 @@ from tvm.auto_scheduler.measure import recover_measure_input
 from tvm.auto_scheduler.workload_registry import workload_key_to_tensors
 
 from common import load_and_register_tasks
+import pickle
 
 
 def print_program(index, inp, res):
+    if res.costs[0] > 1000000:
+        return
     inp = recover_measure_input(inp, True)
     print("=" * 60)
-    print(f"Index: {index}")
+    # print(f"Index: {index}")
     print(f"Time cost (second): {res.costs}")
-    print("Program:")
+    # print("Program:")
+    
     print(inp.state)
+
+def return_program(inp, res):
+    if res.costs[0] > 1000000:
+        return None, None
+    inp = recover_measure_input(inp, True)
+    
+    return inp.state, res.costs
+
+def return_all_states(filename):
+    states = []
+    costs = []
+    inputs, results = auto_scheduler.RecordReader(filename).read_lines()
+    for i in range(len(inputs)):
+        state, cost = return_program(inputs[i], results[i])
+        if state is not None:
+            states.append(state)
+            costs.append(cost)
+    return states, costs
 
 
 if __name__ == "__main__":
@@ -33,10 +55,11 @@ if __name__ == "__main__":
     parser.add_argument("--idx", type=int)
     args = parser.parse_args()
 
-    print("Load tasks...")
+    # print("Load tasks...")
     tasks = load_and_register_tasks()
 
     inputs, results = auto_scheduler.RecordReader(args.filename).read_lines()
+    print(args.filename)
     if args.idx is None:
         for i in range(len(inputs)):
             print_program(i, inputs[i], results[i])

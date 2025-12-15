@@ -115,7 +115,7 @@ if __name__ == "__main__":
     # Search task related arguments
     parser.add_argument("--network", type=str, required=True)
     parser.add_argument("--batch-size", type=int, default=1)
-    parser.add_argument("--target", type=str, default='llvm -mcpu=core-avx2')
+    parser.add_argument("--target", type=str, default='cuda')
     parser.add_argument("--target-host", type=str, default=None)
     parser.add_argument("--n-trials", type=int, default=1000)
     parser.add_argument("--eval-only", action='store_true')

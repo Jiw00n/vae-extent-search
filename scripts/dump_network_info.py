@@ -140,11 +140,12 @@ def build_network_keys():
     network_keys = []
 
     # resnet_18 and resnet_50
-    for batch_size in [1, 4, 8]:
+    for batch_size in [1]:
         for image_size in [224, 240, 256]:
             for layer in [18, 50]:
                 network_keys.append((f'resnet_{layer}',
                                     [(batch_size, 3, image_size, image_size)]))
+    return network_keys
 
     # mobilenet_v2
     for batch_size in [1, 4, 8]:
@@ -229,7 +230,7 @@ if __name__ == "__main__":
 
     # Dump the relay ir and task info for all networks
     network_keys = build_network_keys()
-    target = tvm.target.Target('llvm')
+    target = tvm.target.Target('cuda')
     for key in tqdm(network_keys):
         dump_network(key, target)
         gc.collect()

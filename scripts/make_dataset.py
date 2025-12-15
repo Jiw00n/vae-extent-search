@@ -1,8 +1,9 @@
 """Make a dataset file.
 
 Usage:
-python3 make_dataset.py --logs dataset/measure_records/e5-2673/*.json
-python3 make_dataset.py --logs dataset/measure_records/e5-2673/*.json --sample-in-files 100
+python3 make_dataset.py --logs ../dataset/measure_records/e5-2673/*.json
+python3 make_dataset.py --logs ../dataset/measure_records/e5-2673/*.json --sample-in-files 100
+python3 make_dataset.py --logs '/root/work/tenset/dataset/measure_records/k80/([0bcb8746286db050cd088f375c85372d,1,64,64,128,6,6,32,128,1,64,64,32],cuda).json' --out-file dataset_k80.pkl
 python3 make_dataset.py --preset batch-size-1
 """
 import argparse
