@@ -1,0 +1,2 @@
+measure_size,weights,grad_num,rand_num,phase,used_time,train_size,val_reg_r2,val_rank_r2,sampling_seed
+32,"(0.5, 0.2, 0.3)",2,0,3,30.09,96,"[0.5377, 0.2608, 0.2429]","[0.8072, 0.8035, 0.8601]",2000
