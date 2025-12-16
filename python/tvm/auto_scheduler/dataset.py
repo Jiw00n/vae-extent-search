@@ -87,7 +87,7 @@ class Dataset:
     def random_split_within_task(self,
                                  train_set_ratio: float=None,
                                  train_set_num: int=None,
-                                 shuffle_time: bool=False) -> Tuple["Dataset", "Dataset"]:
+                                 shuffle_time: bool=False, train_idxs=None, test_idxs=None) -> Tuple["Dataset", "Dataset"]:
         """Randomly split the dataset into a training set and a test set.
         Do the split within each task. A measurement record is a basic unit.
         """
@@ -111,14 +111,18 @@ class Dataset:
                 arange = np.flip(arange)
                 train_indices, test_indices = arange[:split], arange[split:]
 
+            if train_idxs and test_idxs:
+                train_indices = train_idxs
+                test_indices = test_idxs
+                
             if len(train_indices):
                 train_throughputs = throughputs[train_indices]
-                train_min_latency = self.min_latency[task] / np.max(train_throughputs)
+                train_min_latency = np.min(train_throughputs) / np.max(train_throughputs)
                 train_set.load_task_data(task, features[train_indices], train_throughputs, train_min_latency)
 
             if len(test_indices):
                 test_throughputs = throughputs[test_indices]
-                test_min_latency = self.min_latency[task] / np.max(test_throughputs)
+                test_min_latency = np.min(test_throughputs) / np.max(test_throughputs)
                 test_set.load_task_data(task, features[test_indices], test_throughputs, test_min_latency)
 
         return train_set, test_set
@@ -207,7 +211,7 @@ class Dataset:
         return sum(len(x) for x in self.throughputs.values())
 
 
-def make_dataset_from_log_file(log_files, out_file, min_sample_size, verbose=1):
+def make_dataset_from_log_file(log_files, out_file=None, min_sample_size=0, verbose=1):
     """Make a dataset file from raw log files"""
     from tqdm import tqdm
 
@@ -232,12 +236,13 @@ def make_dataset_from_log_file(log_files, out_file, min_sample_size, verbose=1):
                     measure_records[task] = [[], []]
                 measure_records[task][0].append(inp)
                 measure_records[task][1].append(res)
-
+            # breakpoint()
             # Featurize
             features = {}
             throughputs = {}
             min_latency = {}
             for task, (inputs, results) in measure_records.items():
+                
                 features_, normalized_throughputs, task_ids, min_latency_ =\
                     get_per_store_features_from_measure_pairs(inputs, results)
 
@@ -252,6 +257,7 @@ def make_dataset_from_log_file(log_files, out_file, min_sample_size, verbose=1):
                 features[task] = features_
                 throughputs[task] = normalized_throughputs
                 min_latency[task] = min_latency_[0]
+                # breakpoint()
             pickle.dump((features, throughputs, min_latency), open(cache_file, "wb"))
 
         for task in features:
@@ -272,8 +278,11 @@ def make_dataset_from_log_file(log_files, out_file, min_sample_size, verbose=1):
         del dataset.min_latency[task]
 
     # Save to disk
-    pickle.dump(dataset, open(out_file, "wb"))
+    if out_file is not None:
+        pickle.dump(dataset, open(out_file, "wb"))
 
-    if verbose >= 0:
-        print("A dataset file is saved to %s" % out_file)
+        if verbose >= 0:
+            print("A dataset file is saved to %s" % out_file)
+
+    return dataset
 

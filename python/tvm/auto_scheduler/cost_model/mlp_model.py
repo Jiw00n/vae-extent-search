@@ -47,6 +47,7 @@ class SegmentDataLoader:
         flatten_features = []
         ct = 0
         for task in dataset.features:
+            
             throughputs = dataset.throughputs[task]
             self.labels[ct: ct + len(throughputs)] = torch.tensor(throughputs)
             task_embedding = None
@@ -55,6 +56,7 @@ class SegmentDataLoader:
                     (10 if use_workload_embedding else 0),
                     dtype=np.float32,
                 )
+                
 
                 if use_workload_embedding:
                     tmp_task_embedding = get_workload_embedding(task.workload_key)
@@ -69,24 +71,29 @@ class SegmentDataLoader:
 
             for row in dataset.features[task]:
                 self.segment_sizes[ct] = len(row)
-
+                # breakpoint(
+                
+                
                 if task_embedding is not None:
                     tmp = np.tile(task_embedding, (len(row), 1))
                     flatten_features.extend(np.concatenate([row, tmp], axis=1))
                 else:
                     flatten_features.extend(row)
                 ct += 1
-
+            
         max_seg_len = self.segment_sizes.max()
         self.features = torch.tensor(np.array(flatten_features, dtype=np.float32))
+        
         if fea_norm_vec is not None:
             self.normalize(fea_norm_vec)
 
+        # breakpoint(
         self.feature_offsets = (
                     torch.cumsum(self.segment_sizes, 0, dtype=torch.int32) - self.segment_sizes).cpu().numpy()
         self.iter_order = self.pointer = None
 
     def normalize(self, norm_vector=None):
+        # breakpoint(
         if norm_vector is None:
             norm_vector = torch.ones((self.features.shape[1],))
             for i in range(self.features.shape[1]):
@@ -170,28 +177,40 @@ class SegmentSumMLPModule(torch.nn.Module):
             x.requires_grad_(False)
 
     def forward(self, segment_sizes, features, params=None):
+        # n_seg : 배치 사이즈
         n_seg = segment_sizes.shape[0]
         device = features.device
+        # breakpoint()
 
         segment_sizes = segment_sizes.long()
 
+        # (4040, 174) -> (4040, hidden_dim)
+        # 4040은 1,8,... 길이 다 합친거
         features = self.segment_encoder(
             features
         )
+        
+        # breakpoint()
+        # segment_indices : (4040,) 각 벡터가 어느 feature에 속하는지 나타내는 tensor
         segment_indices = torch.repeat_interleave(
             torch.arange(n_seg, device=device), segment_sizes
         )
 
         n_dim = features.shape[1]
+
+         # 각 feature에서 벡터들을 더함 ((512*8,174) -> (512,174))
+        # (4040, hidden_dim) -> (배치 사이즈, hidden_dim)
         segment_sum = torch.scatter_add(
             torch.zeros((n_seg, n_dim), dtype=features.dtype, device=device),
             0,
             segment_indices.view(-1, 1).expand(-1, n_dim),
             features,
         )
+        # batch norm
         output = self.norm(segment_sum)
         output = self.l0(output) + output
         output = self.l1(output) + output
+        # 단일 값
         output = self.decoder(
             output
         ).squeeze()
@@ -496,12 +515,14 @@ class MLPModelInternal:
         for task in train_set.tasks():
             self.register_new_task(task)
 
+        # train_loader.features.shape : (28639, 174) <- flattened
         train_loader = SegmentDataLoader(
             train_set, self.batch_size, self.device, self.use_workload_embedding, self.use_target_embedding,
             self.target_id_dict, shuffle=True
         )
 
         # Normalize features
+        # breakpoint(
         if self.fea_norm_vec is None:
             self.fea_norm_vec = train_loader.normalize()
         else:
@@ -515,6 +536,7 @@ class MLPModelInternal:
 
         n_epoch = n_epoch or self.n_epoch
         early_stop = n_epoch // 6
+        # breakpoint()
 
         net = make_net(self.net_params).to(self.device)
         optimizer = torch.optim.Adam(
@@ -531,7 +553,14 @@ class MLPModelInternal:
             # train
             net.train()
             for batch, (segment_sizes, features, labels) in enumerate(train_loader):
+
+                # segment_sizes : (8, 174)에서 (8,)같은 길이들 모아놓은 tensor (512,)
+                # features : flatten된 feature들 (ex : (4040), 174)
+
+                # breakpoint(
+                
                 optimizer.zero_grad()
+                # breakpoint(
                 loss = self.loss_func(net(segment_sizes, features), labels)
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(net.parameters(), self.grad_clip)

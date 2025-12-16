@@ -182,6 +182,7 @@ def get_per_store_features_from_file(
     min_latency: np.ndarray
             Minimal latency for tasks
     """
+    # breakpoint()
     byte_arr = _ffi_api.GetPerStoreFeaturesFromFile(
         filename, max_lines, max_n_bufs or DEFAULT_MAX_N_BUFS
     )
