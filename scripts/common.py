@@ -65,8 +65,8 @@ def get_measure_record_filename(task, target=None):
     task_key = (task.workload_key, str(target.kind))
     return f"{MEASURE_RECORD_FOLDER}/{target.model}/{clean_name(task_key)}.json"
 
-def load_and_register_tasks():
-    tasks = pickle.load(open(f"{NETWORK_INFO_FOLDER}/all_tasks.pkl", "rb"))
+def load_and_register_tasks(network_info_folder=NETWORK_INFO_FOLDER):
+    tasks = pickle.load(open(f"{network_info_folder}/all_tasks.pkl", "rb"))
 
     for task in tasks:
         auto_scheduler.workload_registry.register_workload_tensors(

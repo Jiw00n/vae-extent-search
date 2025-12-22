@@ -16,6 +16,10 @@ from common import load_and_register_tasks, get_to_measure_filename
 
 def dump_program(task, size, max_retry_iter=10):
     filename = get_to_measure_filename(task)
+    if "([0bcb8746286db050cd088f375c85372d,1,64,64,128,6,6,32,128,1,64,64,32],cuda)" in filename:
+        breakpoint()
+    else:
+        return
     if os.path.exists(filename):
         return
 

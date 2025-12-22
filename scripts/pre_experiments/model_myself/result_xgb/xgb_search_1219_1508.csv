@@ -1,0 +1,2 @@
+measure_size,phase,used_time,train_size,val_reg_r2,val_rank_r2,sampling_seed
+64,2,4.03,128,"[0.4409, 0.5063]",[],2000

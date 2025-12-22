@@ -45,6 +45,8 @@ def remeasure_file(task_idx, task, target, target_host, batch_size, measurer_kwa
     # Make folder and log filename
     target = tvm.target.Target(target)
     log_filename = get_measure_record_filename(task, target)
+    # if not log_filename.startswith("([0bcb8746286db050cd088f375c85372d,1,64,64,128,6,6,32,128,1,64,64,32],cuda)"):
+    #     return
     os.makedirs(os.path.dirname(log_filename), exist_ok=True)
 
     # Make measuer
@@ -94,6 +96,7 @@ if __name__ == "__main__":
 
     end_idx = min(args.end_idx, len(tasks))
 
+    # breakpoint()
     # Remeasure all tasks
     for i in range(args.start_idx, end_idx, args.step_idx):
         with open("progress.txt", "a") as fout:
@@ -117,7 +120,13 @@ if __name__ == "__main__":
             measurer_kwargs['repeat'] = 8
 
         # Run measurement
+        if "0bcb8746286db050cd088f375c85372d" in task.workload_key:
+            breakpoint()
         task_key = (task.workload_key, str(task.target.kind))
+        
+        # if not task.workload_key.startswith("([0bcb8746286db050cd088f375c85372d,1,64,64,128,6,6,32,128,1,64,64,32],cuda)"):
+        #     continue
+        # breakpoint()
         target = tvm.target.Target(args.target)
         remeasure_file(i, task, target, args.target_host, args.batch_size, measurer_kwargs)
 

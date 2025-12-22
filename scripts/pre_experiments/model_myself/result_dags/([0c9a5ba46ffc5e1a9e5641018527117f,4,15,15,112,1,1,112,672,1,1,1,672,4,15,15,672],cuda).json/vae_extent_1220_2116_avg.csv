@@ -1,0 +1,2 @@
+measure_size,encoder_lr,cost_predictor_lr,rank_warmup_epochs,weights,uncertainty_topk,grad_num,rand_num,phase,train_size,used_time,top-1,val_reg_r2,val_rank_r2,seed_n,sampling_seed
+64,1e-05,0.0001,100,"(0.4, 0.3, 0.3)",0,4,0,2.0,128.0,7.5,0.0,"[0.5424, 0.5798]","[None, None]",1,[2000]

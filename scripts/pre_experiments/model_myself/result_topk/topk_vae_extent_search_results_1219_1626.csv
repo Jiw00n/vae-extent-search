@@ -1,0 +1,2 @@
+measure_size,weights,uncertainty_topk,grad_num,rand_num,phase,used_time,train_size,val_reg_r2,val_rank_r2,sampling_seed,top_k
+64,"(0.4, 0.3, 0.3)",64,4,0,6,24.37,384,"[0.5134, 0.4812, 0.4116, 0.3818, 0.4154, 0.427]","[None, None, None, None, None, None]",2000,1
