@@ -258,3 +258,7 @@ dataset/
 build/
 gallery/
 3rdparty/
+
+
+scripts/unfolding/initial_sampling/results_plot/
+scripts/unfolding/initial_sampling/results_plot/*.png

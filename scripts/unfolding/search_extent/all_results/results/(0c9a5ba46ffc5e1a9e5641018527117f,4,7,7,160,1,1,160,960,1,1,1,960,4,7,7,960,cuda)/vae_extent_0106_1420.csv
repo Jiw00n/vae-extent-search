@@ -1,0 +1,2 @@
+,encoder_freeze,scratch,measure_size,weights,uncertainty_topk,grad_num,rand_num,T_mc,encoder_lr,cost_predictor_lr,rank_warmup_epochs,lambda_pair,margin_scale,lambda_smooth,lambda_infonce,tau,tau_c,phase,train_size,top-1,used_time,val_reg_r2,val_rank_r2,sampling_seed
+0,False,False,64,"(0.4, 0.3, 0.3)",64,4,0,20,1e-05,0.0001,100,3.0,0.3,0.01,0.05,0.1,,1,64,0,4.52,[0.6899],[None],2000

@@ -1,0 +1,2 @@
+measure_size,scratch,encoder_freeze,encoder_lr,cost_predictor_lr,weights,rank_warmup_epochs,grad_num,rand_num,lambda_pair,phase,train_size,top-1,used_time,val_reg_r2,val_rank_r2,seed_n,sampling_seed
+64,False,False,1e-05,0.001,"(0.4, 0.3, 0.3)",0,4,0,3.0,2.625,168.0,0.0,9.373750000000001,"[0.6249, 0.7471, 0.758]","[None, None, None]",8,"[2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007]"

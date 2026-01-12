@@ -146,6 +146,10 @@ class XGBModelInternal:
             "verbosity": 0,
             "seed": seed or 43,
             "disable_default_eval_metric": 1,
+            "subsample": 1.0,           # 서브샘플링 비활성화
+            "colsample_bytree": 1.0,    # 컬럼 샘플링 비활성화
+            "colsample_bylevel": 1.0,   # 레벨별 컬럼 샘플링 비활성화
+            "colsample_bynode": 1.0,    # 노드별 컬럼 샘플링 비활성화
         }
 
         # gpu support

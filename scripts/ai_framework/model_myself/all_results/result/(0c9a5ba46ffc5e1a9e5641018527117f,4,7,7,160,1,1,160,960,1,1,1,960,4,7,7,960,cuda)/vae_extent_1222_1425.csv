@@ -1,0 +1,2 @@
+measure_size,scratch,encoder_freeze,encoder_lr,cost_predictor_lr,rank_warmup_epochs,weights,uncertainty_topk,grad_num,rand_num,phase,used_time,train_size,top-1,val_reg_r2,val_rank_r2,sampling_seed
+48,False,False,1e-05,1e-05,100,"(1.0, 0.0, 0.0)",64,2,0,1,5.04,48,1,[0.3974],[None],2000
